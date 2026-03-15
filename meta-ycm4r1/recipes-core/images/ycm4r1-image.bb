@@ -1,12 +1,13 @@
-SUMMARY = "YCM4R1 image – Yocto Linux with ROS 1 Melodic for Raspberry Pi CM3 WiFi"
+SUMMARY = "YCM4R1 image – Yocto Linux with ROS 1 Melodic for Raspberry Pi CM4 WiFi"
 DESCRIPTION = " \
-    Minimal Yocto image for the Raspberry Pi Compute Module 3+ (16 GB, WiFi). \
+    Minimal Yocto image for the Raspberry Pi Compute Module 4 (4 GB RAM, 32 GB eMMC, WiFi). \
     Includes: \
       * ROS 1 Melodic core stack (roscpp, rospy, std_msgs, sensor_msgs, …) \
       * WiFi connectivity (wpa_supplicant + connman) \
       * SSH server (dropbear) \
       * Python 2 run-time (required by Melodic) \
-    Target machine: raspberrypi-cm3 / raspberrypi-cm3-wifi \
+      * CAN bus utilities (canutils) \
+    Target machine: raspberrypi-cm4 / raspberrypi-cm4-wifi \
 "
 
 LICENSE = "MIT"
@@ -99,9 +100,14 @@ IMAGE_INSTALL_append = " \
     ros-melodic-joint-state-publisher \
 "
 
+# ── CAN bus utilities ─────────────────────────────────────────────────────────
+IMAGE_INSTALL_append = " \
+    canutils \
+"
+
 # ── Image size / filesystem ───────────────────────────────────────────────────
-# 16 GB eMMC: reserve generous space for root-fs.
-IMAGE_ROOTFS_SIZE ?= "8388608"      # 8 GiB (in KiB)
+# 32 GB eMMC: reserve generous space for root-fs.
+IMAGE_ROOTFS_SIZE ?= "16777216"     # 16 GiB (in KiB)
 IMAGE_OVERHEAD_FACTOR ?= "1.3"
 
 # Generate a compressed wic image suitable for dd / balenaEtcher.

@@ -1,6 +1,6 @@
 # KAS configuration file for YCM4R1
-# Builds Yocto Linux with ROS1 Melodic for Raspberry Pi Compute Module (CM3+/CM3)
-# with 16 GB eMMC and onboard WiFi (BCM43455).
+# Builds Yocto Linux with ROS1 Melodic for Raspberry Pi Compute Module 4 (CM4)
+# with 4 GB RAM, 32 GB eMMC and onboard WiFi (BCM43455).
 #
 # Prerequisites: kas >= 2.6 installed on the host.
 # Usage:
@@ -11,7 +11,7 @@
 header:
   version: 10
 
-machine: raspberrypi-cm3
+machine: raspberrypi-cm4
 distro: poky
 target: ycm4r1-image
 
@@ -76,7 +76,7 @@ local_conf_header:
     ENABLE_UART = "1"
 
     # ── WiFi ───────────────────────────────────────────────────────────────
-    # Broadcom 43455 WiFi chip fitted on the CM3+ Lite Wi-Fi module.
+    # Broadcom 43455 WiFi chip fitted on the CM4 module.
     MACHINE_FEATURES_append = " wifi"
     DISTRO_FEATURES_append  = " wifi"
 
