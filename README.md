@@ -1,8 +1,8 @@
-# YCM4R1 — Yocto Linux with ROS 1 Melodic for Raspberry Pi Compute Module
+# YCM4R1 — Yocto Linux with ROS 1 Noetic for Raspberry Pi Compute Module 4
 
 A complete Yocto build configuration that produces a bootable Linux image for
-the **Raspberry Pi Compute Module 3+ (16 GB eMMC, onboard WiFi)** pre-loaded
-with **ROS 1 Melodic**.
+the **Raspberry Pi Compute Module 4 (4 GB RAM, 32 GB eMMC, onboard WiFi)**
+pre-loaded with **ROS 1 Noetic**.
 
 ---
 
@@ -10,10 +10,11 @@ with **ROS 1 Melodic**.
 
 | Attribute | Value |
 |-----------|-------|
-| Board | Raspberry Pi Compute Module 3+ (CM3+) |
-| Storage | 16 GB eMMC (onboard) |
+| Board | Raspberry Pi Compute Module 4 (CM4) |
+| RAM | 4 GB |
+| Storage | 32 GB eMMC (onboard) |
 | WiFi | Broadcom BCM43455 (802.11 b/g/n/ac) |
-| Architecture | ARMv8 (32-bit kernel, `raspberrypi-cm3`) |
+| Architecture | ARMv8 (64-bit kernel, `raspberrypi4-64`) |
 
 ---
 
@@ -28,9 +29,7 @@ YCM4R1/
 │   └── bblayers.conf           # Layer list (classic build)
 ├── meta-ycm4r1/                # Custom Yocto layer
 │   ├── conf/
-│   │   ├── layer.conf          # Layer declaration
-│   │   └── machine/
-│   │       └── raspberrypi-cm3-wifi.conf  # Optional CM3+WiFi machine
+│   │   └── layer.conf          # Layer declaration
 │   └── recipes-core/
 │       └── images/
 │           └── ycm4r1-image.bb # Custom image recipe
@@ -43,11 +42,11 @@ YCM4R1/
 
 | Layer | Branch | Purpose |
 |-------|--------|---------|
-| `poky` | `warrior` | Yocto 2.7 build system & core metadata |
-| `meta-openembedded` | `warrior` | Extended package set (OE, Python, Networking) |
-| `meta-raspberrypi` | `warrior` | Raspberry Pi BSP (kernel, firmware, bootloader) |
-| `meta-ros` | `warrior` | ROS 1 Melodic generated recipes |
-| `meta-ycm4r1` | — | Project-specific image & machine configuration |
+| `poky` | `kirkstone` | Yocto 4.0 LTS build system & core metadata |
+| `meta-openembedded` | `kirkstone` | Extended package set (OE, Python, Networking) |
+| `meta-raspberrypi` | `kirkstone` | Raspberry Pi BSP (kernel, firmware, bootloader) |
+| `meta-ros` | `kirkstone` | ROS 1 Noetic generated recipes |
+| `meta-ycm4r1` | — | Project-specific image configuration |
 
 ---
 
@@ -59,12 +58,12 @@ YCM4R1/
 ### 1 — Install host dependencies
 
 ```bash
-# Ubuntu 18.04 / 20.04 / Debian 10/11
+# Ubuntu 20.04 / 22.04 / Debian 11/12
 ./scripts/install-deps.sh
 ```
 
 > **Minimum host requirements:** 100 GB free disk space, 16 GB RAM (32 GB
-> recommended for parallel builds with ROS packages), Ubuntu 18.04 LTS or later.
+> recommended for parallel builds with ROS packages), Ubuntu 20.04 LTS or later.
 > If RAM is limited, configure `BB_NUMBER_THREADS` and `PARALLEL_MAKE` in
 > `conf/local.conf` to reduce concurrency and add swap space (≥ 8 GB).
 
@@ -82,17 +81,17 @@ number of available CPU cores.
 After a successful build the image is located at:
 
 ```
-build/tmp/deploy/images/raspberrypi-cm3/ycm4r1-image-raspberrypi-cm3.wic.bz2
+build/tmp/deploy/images/raspberrypi4-64/ycm4r1-image-raspberrypi4-64.wic.bz2
 ```
 
-Flash it to the CM3+ eMMC using the
+Flash it to the CM4 eMMC using the
 [Raspberry Pi usbboot](https://github.com/raspberrypi/usbboot) utility or
 `rpiboot` + `Raspberry Pi Imager`:
 
 ```bash
 # Using bmaptool (fast, verifies checksum)
 sudo bmaptool copy \
-    build/tmp/deploy/images/raspberrypi-cm3/ycm4r1-image-raspberrypi-cm3.wic.bz2 \
+    build/tmp/deploy/images/raspberrypi4-64/ycm4r1-image-raspberrypi4-64.wic.bz2 \
     /dev/sdX
 ```
 
@@ -119,9 +118,9 @@ bitbake ycm4r1-image
 
 | Category | Packages |
 |----------|---------- |
-| **ROS 1 Melodic** | `ros-core`, `ros-base`, `roscpp`, `rospy`, `roslaunch`, `rosnode`, `rostopic`, `rosservice`, `rosparam`, `tf`, `tf2`, `std_msgs`, `sensor_msgs`, `geometry_msgs`, `nav_msgs`, `actionlib` |
+| **ROS 1 Noetic** | `ros-core`, `ros-base`, `roscpp`, `rospy`, `roslaunch`, `rosnode`, `rostopic`, `rosservice`, `rosparam`, `tf`, `tf2`, `std_msgs`, `sensor_msgs`, `geometry_msgs`, `nav_msgs`, `actionlib` |
 | **WiFi** | `linux-firmware-rpidistro-bcm43455`, `wpa-supplicant`, `connman`, `iw` |
-| **Python** | Python 2 (ROS Melodic runtime), Python 3 + pip |
+| **Python** | Python 3 + pip |
 | **System tools** | `nano`, `htop`, `strace`, `gdb`, `i2c-tools`, `util-linux` |
 | **SSH** | `dropbear` SSH server |
 
@@ -154,7 +153,7 @@ udhcpc -i wlan0
 
 ```bash
 # On the target board
-source /opt/ros/melodic/setup.sh
+source /opt/ros/noetic/setup.sh
 roscore &
 rostopic list
 ```

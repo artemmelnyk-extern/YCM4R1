@@ -3,7 +3,7 @@
 # Appends WiFi, Bluetooth, and CAN bus kernel configuration fragments to the
 # Raspberry Pi kernel build.
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/fragments:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/fragments:"
 
 SRC_URI += " \
     file://cfg/wifi.cfg \

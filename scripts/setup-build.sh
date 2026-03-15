@@ -15,7 +15,7 @@
 set -euo pipefail
 
 # ── Versions / branches ───────────────────────────────────────────────────────
-YOCTO_BRANCH="warrior"        # Yocto 2.7 – aligns with ROS 1 Melodic
+YOCTO_BRANCH="kirkstone"      # Yocto 4.0 LTS – aligns with ROS 1 Noetic
 POKY_URL="https://git.yoctoproject.org/git/poky"
 OE_URL="https://git.openembedded.org/meta-openembedded"
 RPI_URL="https://github.com/agherzan/meta-raspberrypi"

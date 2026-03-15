@@ -1,13 +1,13 @@
-SUMMARY = "YCM4R1 image – Yocto Linux with ROS 1 Melodic for Raspberry Pi CM4 WiFi"
+SUMMARY = "YCM4R1 image – Yocto Linux with ROS 1 Noetic for Raspberry Pi CM4"
 DESCRIPTION = " \
     Minimal Yocto image for the Raspberry Pi Compute Module 4 (4 GB RAM, 32 GB eMMC, WiFi). \
     Includes: \
-      * ROS 1 Melodic core stack (roscpp, rospy, std_msgs, sensor_msgs, …) \
+      * ROS 1 Noetic core stack (roscpp, rospy, std_msgs, sensor_msgs, …) \
       * WiFi connectivity (wpa_supplicant + connman) \
       * SSH server (dropbear) \
-      * Python 2 run-time (required by Melodic) \
+      * Python 3 run-time \
       * CAN bus utilities (canutils) \
-    Target machine: raspberrypi-cm4 / raspberrypi-cm4-wifi \
+    Target machine: raspberrypi4-64 \
 "
 
 LICENSE = "MIT"
@@ -15,15 +15,15 @@ LICENSE = "MIT"
 # Start from the standard Poky base image.
 inherit core-image
 
-# ── Base image features ───────────────────────────────────────────────────────
+# ── Base image features ─────────────────────────────────────────────────────
 IMAGE_FEATURES += " \
     ssh-server-dropbear \
     package-management \
     hwcodecs \
 "
 
-# ── Core packages ─────────────────────────────────────────────────────────────
-IMAGE_INSTALL_append = " \
+# ── Core packages ───────────────────────────────────────────────────────────
+IMAGE_INSTALL:append = " \
     packagegroup-core-boot \
     packagegroup-base-extended \
     kernel-modules \
@@ -35,36 +35,15 @@ IMAGE_INSTALL_append = " \
     gdb \
 "
 
-# ── Python 2 (required by ROS1 Melodic) ──────────────────────────────────────
-IMAGE_INSTALL_append = " \
-    python \
-    python-argparse \
-    python-datetime \
-    python-distutils \
-    python-docutils \
-    python-logging \
-    python-multiprocessing \
-    python-pprint \
-    python-shell \
-    python-xmlrpc \
-    python-compression \
-    python-math \
-    python-netclient \
-    python-netserver \
-    python-threading \
-    python-pickle \
-    python-subprocess \
-"
-
-# ── Python 3 utilities ────────────────────────────────────────────────────────
-IMAGE_INSTALL_append = " \
+# ── Python 3 (required by ROS 1 Noetic) ──────────────────────────────────────
+IMAGE_INSTALL:append = " \
     python3 \
     python3-pip \
     python3-setuptools \
 "
 
-# ── WiFi / Connectivity ───────────────────────────────────────────────────────
-IMAGE_INSTALL_append = " \
+# ── WiFi / Connectivity ─────────────────────────────────────────────────────
+IMAGE_INSTALL:append = " \
     linux-firmware-rpidistro-bcm43455 \
     linux-firmware-rpidistro-bcm43430 \
     wpa-supplicant \
@@ -72,40 +51,39 @@ IMAGE_INSTALL_append = " \
     connman-client \
     iw \
     wireless-tools \
-    crda \
 "
 
-# ── ROS 1 Melodic ─────────────────────────────────────────────────────────────
-IMAGE_INSTALL_append = " \
-    ros-melodic-ros-core \
-    ros-melodic-ros-base \
-    ros-melodic-roscpp \
-    ros-melodic-rospy \
-    ros-melodic-roslaunch \
-    ros-melodic-rosnode \
-    ros-melodic-rostopic \
-    ros-melodic-rosservice \
-    ros-melodic-rosparam \
-    ros-melodic-std-msgs \
-    ros-melodic-sensor-msgs \
-    ros-melodic-geometry-msgs \
-    ros-melodic-nav-msgs \
-    ros-melodic-actionlib \
-    ros-melodic-tf \
-    ros-melodic-tf2 \
-    ros-melodic-pluginlib \
-    ros-melodic-dynamic-reconfigure \
-    ros-melodic-diagnostic-updater \
-    ros-melodic-robot-state-publisher \
-    ros-melodic-joint-state-publisher \
+# ── ROS 1 Noetic ────────────────────────────────────────────────────────────
+IMAGE_INSTALL:append = " \
+    ros-noetic-ros-core \
+    ros-noetic-ros-base \
+    ros-noetic-roscpp \
+    ros-noetic-rospy \
+    ros-noetic-roslaunch \
+    ros-noetic-rosnode \
+    ros-noetic-rostopic \
+    ros-noetic-rosservice \
+    ros-noetic-rosparam \
+    ros-noetic-std-msgs \
+    ros-noetic-sensor-msgs \
+    ros-noetic-geometry-msgs \
+    ros-noetic-nav-msgs \
+    ros-noetic-actionlib \
+    ros-noetic-tf \
+    ros-noetic-tf2 \
+    ros-noetic-pluginlib \
+    ros-noetic-dynamic-reconfigure \
+    ros-noetic-diagnostic-updater \
+    ros-noetic-robot-state-publisher \
+    ros-noetic-joint-state-publisher \
 "
 
-# ── CAN bus utilities ─────────────────────────────────────────────────────────
-IMAGE_INSTALL_append = " \
+# ── CAN bus utilities ───────────────────────────────────────────────────────
+IMAGE_INSTALL:append = " \
     canutils \
 "
 
-# ── Image size / filesystem ───────────────────────────────────────────────────
+# ── Image size / filesystem ─────────────────────────────────────────────────
 # 32 GB eMMC: reserve generous space for root-fs.
 IMAGE_ROOTFS_SIZE ?= "16777216"     # 16 GiB (in KiB)
 IMAGE_OVERHEAD_FACTOR ?= "1.3"

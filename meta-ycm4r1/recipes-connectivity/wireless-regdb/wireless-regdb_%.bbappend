@@ -3,4 +3,6 @@
 # chipset operates in a legal frequency range.
 # This append simply pulls in the crda run-time and the regulatory database.
 
-RDEPENDS_${BPN} += "crda"
+# crda is deprecated with kernel 5.15+; the in-kernel regulatory database
+# is used instead.  Keep wireless-regdb as a run-time recommendation.
+RRECOMMENDS:${PN} += "wireless-regdb"

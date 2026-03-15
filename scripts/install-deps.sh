@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # scripts/install-deps.sh
 #
-# Install all host-side dependencies required to run a Yocto warrior build.
-# Tested on Ubuntu 18.04 / 20.04 / Debian 10/11.
+# Install all host-side dependencies required to run a Yocto kirkstone build.
+# Tested on Ubuntu 20.04 / 22.04 / Debian 11/12.
 # Run once as a user with sudo privileges before starting the build.
 
 set -euo pipefail
@@ -12,7 +12,7 @@ UBUNTU_DEPS=(
     gawk wget git-core diffstat unzip texinfo gcc-multilib
     build-essential chrpath socat cpio python3 python3-pip python3-pexpect
     xz-utils debianutils iputils-ping python3-git python3-jinja2
-    libegl1-mesa libsdl1.2-dev pylint3 xterm
+    libegl1-mesa libsdl1.2-dev xterm python3-distutils
     # Additional utilities
     curl git-lfs locales lsb-release sudo
     # kas (Yocto build management)
@@ -53,7 +53,7 @@ install_packages() {
 install_kas() {
     echo "[info] Installing kas (pinned version) …"
     # Pin to a known-good version; update intentionally when upgrading.
-    pip3 install --user "kas==3.3"
+    pip3 install --user "kas==4.4"
     export PATH="${HOME}/.local/bin:${PATH}"
     kas --version
 }

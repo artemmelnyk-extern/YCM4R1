@@ -1,25 +1,25 @@
 # KAS configuration file for YCM4R1
-# Builds Yocto Linux with ROS1 Melodic for Raspberry Pi Compute Module 4 (CM4)
+# Builds Yocto Linux with ROS 1 Noetic for Raspberry Pi Compute Module 4 (CM4)
 # with 4 GB RAM, 32 GB eMMC and onboard WiFi (BCM43455).
 #
-# Prerequisites: kas >= 2.6 installed on the host.
+# Prerequisites: kas >= 3.0 installed on the host.
 # Usage:
 #   kas build kas/ycm4r1.yml
 # or, to drop into an interactive shell:
 #   kas shell kas/ycm4r1.yml
 
 header:
-  version: 10
+  version: 14
 
-machine: raspberrypi-cm4
+machine: raspberrypi4-64
 distro: poky
 target: ycm4r1-image
 
 repos:
-  # ── Poky (Yocto 2.7 / warrior) ────────────────────────────────────────────
+  # ── Poky (Yocto 4.0 / kirkstone) ──────────────────────────────────────────
   poky:
     url: https://git.yoctoproject.org/git/poky
-    branch: warrior
+    branch: kirkstone
     layers:
       meta:
       meta-poky:
@@ -28,7 +28,7 @@ repos:
   # ── OpenEmbedded layers ────────────────────────────────────────────────────
   meta-openembedded:
     url: https://git.openembedded.org/meta-openembedded
-    branch: warrior
+    branch: kirkstone
     layers:
       meta-oe:
       meta-python:
@@ -38,23 +38,22 @@ repos:
   # ── Raspberry Pi BSP ──────────────────────────────────────────────────────
   meta-raspberrypi:
     url: https://github.com/agherzan/meta-raspberrypi
-    branch: warrior
+    branch: kirkstone
     layers:
       meta-raspberrypi:
 
-  # ── ROS1 Melodic ──────────────────────────────────────────────────────────
-  # meta-ros warrior branch ships ROS 1 Melodic generated recipes.
+  # ── ROS 1 Noetic ──────────────────────────────────────────────────────────
+  # meta-ros kirkstone branch ships ROS 1 Noetic generated recipes.
   meta-ros:
     url: https://github.com/ros/meta-ros
-    branch: warrior
+    branch: kirkstone
     layers:
       meta-ros-common:
       meta-ros1:
-      meta-ros1-melodic:
+      meta-ros1-noetic:
 
   # ── Project-specific layer ─────────────────────────────────────────────────
   meta-ycm4r1:
-    url: ""   # local layer – no remote URL needed
     path: meta-ycm4r1
     layers:
       meta-ycm4r1:
@@ -69,7 +68,7 @@ local_conf_header:
     PACKAGE_CLASSES = "package_ipk"
 
     # ── SDK / extra image features ─────────────────────────────────────────
-    EXTRA_IMAGE_FEATURES ?= "debug-tweaks ssh-server-openssh"
+    EXTRA_IMAGE_FEATURES ?= "debug-tweaks"
 
     # ── Raspberry Pi specific ──────────────────────────────────────────────
     # Enable UART so that early boot messages are visible on the serial console.
@@ -77,14 +76,14 @@ local_conf_header:
 
     # ── WiFi ───────────────────────────────────────────────────────────────
     # Broadcom 43455 WiFi chip fitted on the CM4 module.
-    MACHINE_FEATURES_append = " wifi"
-    DISTRO_FEATURES_append  = " wifi"
+    MACHINE_FEATURES:append = " wifi"
+    DISTRO_FEATURES:append  = " wifi"
 
     # ── ROS ────────────────────────────────────────────────────────────────
-    ROS_DISTRO = "melodic"
-    ROS_OE_RELEASE_SERIES = "warrior"
+    ROS_DISTRO = "noetic"
+    ROS_OE_RELEASE_SERIES = "kirkstone"
 
     # ── Misc ───────────────────────────────────────────────────────────────
     # Accept the Broadcom WiFi firmware EULA.
-    LICENSE_FLAGS_WHITELIST = "synaptics-killswitch commercial_brcm43455"
-    CONF_VERSION = "1"
+    LICENSE_FLAGS_ACCEPTED = "synaptics-killswitch commercial_brcm43455"
+    CONF_VERSION = "2"
