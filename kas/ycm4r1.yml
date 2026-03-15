@@ -1,0 +1,90 @@
+# KAS configuration file for YCM4R1
+# Builds Yocto Linux with ROS1 Melodic for Raspberry Pi Compute Module (CM3+/CM3)
+# with 16 GB eMMC and onboard WiFi (BCM43455).
+#
+# Prerequisites: kas >= 2.6 installed on the host.
+# Usage:
+#   kas build kas/ycm4r1.yml
+# or, to drop into an interactive shell:
+#   kas shell kas/ycm4r1.yml
+
+header:
+  version: 10
+
+machine: raspberrypi-cm3
+distro: poky
+target: ycm4r1-image
+
+repos:
+  # ── Poky (Yocto 2.7 / warrior) ────────────────────────────────────────────
+  poky:
+    url: https://git.yoctoproject.org/git/poky
+    branch: warrior
+    layers:
+      meta:
+      meta-poky:
+      meta-yocto-bsp:
+
+  # ── OpenEmbedded layers ────────────────────────────────────────────────────
+  meta-openembedded:
+    url: https://git.openembedded.org/meta-openembedded
+    branch: warrior
+    layers:
+      meta-oe:
+      meta-python:
+      meta-networking:
+      meta-filesystems:
+
+  # ── Raspberry Pi BSP ──────────────────────────────────────────────────────
+  meta-raspberrypi:
+    url: https://github.com/agherzan/meta-raspberrypi
+    branch: warrior
+    layers:
+      meta-raspberrypi:
+
+  # ── ROS1 Melodic ──────────────────────────────────────────────────────────
+  # meta-ros warrior branch ships ROS 1 Melodic generated recipes.
+  meta-ros:
+    url: https://github.com/ros/meta-ros
+    branch: warrior
+    layers:
+      meta-ros-common:
+      meta-ros1:
+      meta-ros1-melodic:
+
+  # ── Project-specific layer ─────────────────────────────────────────────────
+  meta-ycm4r1:
+    url: ""   # local layer – no remote URL needed
+    path: meta-ycm4r1
+    layers:
+      meta-ycm4r1:
+
+local_conf_header:
+  standard: |
+    # ── Build parallelism ──────────────────────────────────────────────────
+    BB_NUMBER_THREADS ?= "${@oe.utils.cpu_count()}"
+    PARALLEL_MAKE     ?= "-j ${@oe.utils.cpu_count()}"
+
+    # ── Package format ─────────────────────────────────────────────────────
+    PACKAGE_CLASSES = "package_ipk"
+
+    # ── SDK / extra image features ─────────────────────────────────────────
+    EXTRA_IMAGE_FEATURES ?= "debug-tweaks ssh-server-openssh"
+
+    # ── Raspberry Pi specific ──────────────────────────────────────────────
+    # Enable UART so that early boot messages are visible on the serial console.
+    ENABLE_UART = "1"
+
+    # ── WiFi ───────────────────────────────────────────────────────────────
+    # Broadcom 43455 WiFi chip fitted on the CM3+ Lite Wi-Fi module.
+    MACHINE_FEATURES_append = " wifi"
+    DISTRO_FEATURES_append  = " wifi"
+
+    # ── ROS ────────────────────────────────────────────────────────────────
+    ROS_DISTRO = "melodic"
+    ROS_OE_RELEASE_SERIES = "warrior"
+
+    # ── Misc ───────────────────────────────────────────────────────────────
+    # Accept the Broadcom WiFi firmware EULA.
+    LICENSE_FLAGS_WHITELIST = "synaptics-killswitch commercial_brcm43455"
+    CONF_VERSION = "1"

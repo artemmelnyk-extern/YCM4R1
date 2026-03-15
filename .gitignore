@@ -1,0 +1,24 @@
+# Yocto build directory (created by oe-init-build-env or kas)
+build/
+
+# Downloaded source archives
+downloads/
+
+# Shared state cache
+sstate-cache/
+
+# Bitbake lock files
+*.lock
+
+# Editor backup files
+*~
+*.swp
+*.swo
+
+# macOS metadata
+.DS_Store
+
+# IDE project files
+.vscode/
+.idea/
+*.code-workspace
